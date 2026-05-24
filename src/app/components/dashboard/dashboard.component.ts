@@ -1,46 +1,55 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RecipeService } from '../../services/recipe.service';
+import { Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
 import { Recipe } from '../../models/recipe.model';
+import { RecipeService } from '../../services/recipe.service';
 
 
 @Component({
 	selector: 'app-dashboard',
 	standalone: true,
-	imports: [CommonModule],
+	imports: [CommonModule, RouterLink],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-	recipes: Recipe[] = [];
-	filteredRecipes: Recipe[] = [];
-	isLoading = true;
+	private recipeService = inject(RecipeService);
 
-	// Temporary mock tags until we add them to the database!
-	availableTags: string[] = ['All', 'Vegetarian', 'Soup', 'Dinner', 'Quick & Easy'];
-	selectedTag: string = 'All';
+	recipes: Signal<Recipe[]> = this.recipeService.recipes;
+	isLoading: Signal<boolean> = this.recipeService.loadingRecipes;
 
-	constructor(private recipeService: RecipeService) {}
+	filteredRecipes = computed<Recipe[]>(() => {
+		const recipes = this.recipes();
+		const selected = this.selectedTag();
 
-	async ngOnInit() {
-		try {
-			// Captures the real recipes directly from your database, complete with their real tags!
-			this.recipes = await this.recipeService.getRecipeSummaries();
-			this.filteredRecipes = this.recipes;
-		} catch (error) {
-			console.error('Failed to load dashboard recipes', error);
-		} finally {
-			this.isLoading = false;
-		}
+		return this.selectedTag() === RECIPE_TAG.ALL
+			? recipes
+			: recipes.filter(r => r.tags.includes(selected));
+	});
+
+	availableTags: { id: RECIPE_TAG, label: string }[] = [
+		{ id: RECIPE_TAG.ALL, label: 'All Recipes ✨' },
+		{ id: RECIPE_TAG.VEGETARIAN, label: '🥦 Vegetarian' },
+		{ id: RECIPE_TAG.SOUP, label: 'Soup' },
+		{ id: RECIPE_TAG.QUICK, label: '⚡ Quick' },
+		{ id: RECIPE_TAG.STEAMED, label: 'Steamed' }
+	];
+	selectedTag = signal<RECIPE_TAG>(RECIPE_TAG.ALL);
+
+	ngOnInit(): void {
+		this.recipeService.getRecipeSummaries();
 	}
 
-	filterByTag(tag: string) {
-		this.selectedTag = tag;
-		if (tag === 'All') {
-			this.filteredRecipes = this.recipes;
-		} else {
-			// Filters the list instantly in the browser memory
-			this.filteredRecipes = this.recipes.filter(recipe => recipe.tags.includes(tag));
-		}
+	selectTag(tag: RECIPE_TAG): void {
+		this.selectedTag.set(tag);
 	}
+}
+
+enum RECIPE_TAG {
+	ALL = 'all',
+	VEGETARIAN = 'vegetarian',
+	SOUP = 'soup',
+	QUICK = 'quick',
+	STEAMED = 'steamed'
 }
