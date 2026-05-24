@@ -1,14 +1,14 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, DashboardComponent],
+    imports: [RouterOutlet, RouterLink],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 })
 export class App {
-    protected readonly title = signal('recipe-app');
+    isLeftCollapsed = false;
+    isRightCollapsed = true;
 }

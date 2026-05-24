@@ -1,17 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { Recipe } from '../models/recipe.model';
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class RecipeService {
+    recipes = signal<Recipe[]>([]);
+    loadingRecipes = signal<boolean>(false);
+
     constructor(private supabaseService: SupabaseService) {}
 
     /**
      * Fetches only the essential info needed to display recipe summary cards on the dashboard
      */
-    async getRecipeSummaries(): Promise<Recipe[]> {
+    async getRecipeSummaries(): Promise<void> {
+        this.loadingRecipes.set(true);
+
         const { data, error } = await this.supabaseService.client
             .from('recipes')
             .select('id, title, servings_base, image_url, tags, created_at')
@@ -22,7 +28,10 @@ export class RecipeService {
             throw error;
         }
 
-        return (data as unknown as Recipe[]) || [];
+        if (data) {
+            this.recipes.set(data as Recipe[]);
+        }
+        this.loadingRecipes.set(false);
     }
 
     /**
