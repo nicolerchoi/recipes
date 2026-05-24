@@ -14,14 +14,14 @@ export interface IngredientGroup {
     id: number;
     recipe_id: number;
     name: string;
-    // Optional: Nesting the actual ingredients inside their respective section
-    ingredients?: Ingredient[];
+    ingredients: Ingredient[];
 }
 
 export interface Ingredient {
     id: number;
     group_id: number;
     name: string;
+    description?: string;
     base_quantity: number;
-    unit: string;
+    unit?: string;
 }

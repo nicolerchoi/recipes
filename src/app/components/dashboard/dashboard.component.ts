@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Recipe } from '../../models/recipe.model';
-import { RecipeService } from '../../services/recipe.service';
+import { Recipe } from '../../models';
+import { RecipeService } from '../../services';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
 			: recipes.filter(r => r.tags.includes(selected));
 	});
 
-	availableTags: { id: RECIPE_TAG, label: string }[] = [
+	readonly availableTags: { id: RECIPE_TAG, label: string }[] = [
 		{ id: RECIPE_TAG.ALL, label: 'All Recipes ✨' },
 		{ id: RECIPE_TAG.VEGETARIAN, label: '🥦 Vegetarian' },
 		{ id: RECIPE_TAG.SOUP, label: 'Soup' },
@@ -36,6 +36,12 @@ export class DashboardComponent implements OnInit {
 		{ id: RECIPE_TAG.STEAMED, label: 'Steamed' }
 	];
 	selectedTag = signal<RECIPE_TAG>(RECIPE_TAG.ALL);
+
+	recipePluralMapping: { [k: string]: string } = {
+		'=0': '0 Recipes',
+		'=1': '1 Recipe',
+		'other': '# Recipes'
+	};
 
 	ngOnInit(): void {
 		this.recipeService.getRecipeSummaries();

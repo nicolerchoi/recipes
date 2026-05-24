@@ -1,6 +1,8 @@
 import { Injectable, signal } from '@angular/core';
+
+import { Recipe } from '../models';
+
 import { SupabaseService } from './supabase.service';
-import { Recipe } from '../models/recipe.model';
 
 
 @Injectable({
@@ -9,6 +11,9 @@ import { Recipe } from '../models/recipe.model';
 export class RecipeService {
     recipes = signal<Recipe[]>([]);
     loadingRecipes = signal<boolean>(false);
+
+    currentRecipe = signal<Recipe | null>(null);
+    loadingCurrentRecipe = signal<boolean>(false);
 
     constructor(private supabaseService: SupabaseService) {}
 
@@ -32,6 +37,37 @@ export class RecipeService {
             this.recipes.set(data as Recipe[]);
         }
         this.loadingRecipes.set(false);
+    }
+
+    async getRecipeById(id: number): Promise<void> {
+        this.loadingCurrentRecipe.set(true);
+
+        const { data, error } = await this.supabaseService.client
+            .from('recipes')
+            .select(`
+                *,
+                ingredient_groups (
+                    id,
+                    name,
+                    ingredients (
+                        id,
+                        name,
+                        description,
+                        base_quantity,
+                        unit
+                    )
+                )
+            `)
+            .eq('id', id)
+            .single(); // only expect one specific record row
+        
+        if (!error && data) {
+            this.currentRecipe.set(data)
+        } else {
+            this.currentRecipe.set(null)
+        }
+
+        this.loadingCurrentRecipe.set(false)
     }
 
     /**
