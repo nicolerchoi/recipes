@@ -1,0 +1,38 @@
+<div class="dashboard-container">
+    <header>
+        <h1>My Cookbook</h1>
+        <p>What are we cooking today?</p>
+    </header>
+
+    <!-- Hashtag / Label Filter Bar -->
+    <div class="tag-bar">
+        <button 
+            *ngFor="let tag of availableTags" 
+            [class.active]="selectedTag === tag"
+            (click)="filterByTag(tag)">
+            #{{ tag.toLowerCase() }}
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading">
+        <p>Gathering fresh ingredients...</p>
+    </div>
+
+    <!-- Recipe Grid Display -->
+    <div *ngIf="!isLoading" class="recipe-grid">
+        <div class="recipe-card" *ngFor="let recipe of filteredRecipes">
+            <div class="card-image" [style.background-image]="recipe.image_url ? 'url(' + recipe.image_url + ')' : 'url(https://placehold.co/600x400?text=No+Image)'"></div>
+            <div class="card-content">
+                <h3>{{ recipe.title }}</h3>
+                <span class="servings">⏱ {{ recipe.servings_base }} servings</span>
+                <button class="view-btn">View Recipe →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredRecipes.length === 0" class="empty-state">
+        <p>No recipes found matching #{{ selectedTag.toLowerCase() }}</p>
+    </div>
+</div>

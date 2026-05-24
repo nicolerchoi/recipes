@@ -5,6 +5,7 @@ export interface Recipe {
     image_url: string | null;
     instructions: string[];
     created_at: string;
+    tags: string[];
     // Optional: We can nest these when fetching deep relational data
     ingredient_groups?: IngredientGroup[];
 }

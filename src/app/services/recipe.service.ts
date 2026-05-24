@@ -8,14 +8,23 @@ import { Recipe } from '../models/recipe.model';
 export class RecipeService {
     constructor(private supabaseService: SupabaseService) {}
 
-    async getRecipeSummaryList(): Promise<Partial<Recipe>[]> {
+    /**
+     * Fetches only the essential info needed to display recipe summary cards on the dashboard
+     */
+    async getRecipeSummaries(): Promise<Recipe[]> {
         const { data, error } = await this.supabaseService.client
             .from('recipes')
-            .select('id, title, servings_base, image_url, created_at')
+            .select('id, title, servings_base, image_url, tags, created_at')
             .order('created_at', { ascending: false });
-            
-        return data || [];
+
+        if (error) {
+            console.error('Error fetching recipe summaries:', error.message);
+            throw error;
+        }
+
+        return (data as unknown as Recipe[]) || [];
     }
+
     /**
      * Fetches all recipes, complete with nested ingredient groups and ingredients!
      */
