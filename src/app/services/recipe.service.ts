@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-import { Recipe } from '../models';
+import { BaseRecipe, Recipe, UNIT } from '../models';
 
 import { SupabaseService } from './supabase.service';
 
@@ -105,4 +105,57 @@ export class RecipeService {
 
         return (data as unknown as Recipe[]) || [];
     }
+
+    async createRecipe(recipeData: BaseRecipe, groupsData: IngredientGroupRequest[]): Promise<string | null> {
+        try {
+            // Insert the master recipe metadata first
+            const { data: recipe, error: recipeError } = await this.supabaseService.client
+                .from('recipes')
+                .insert(recipeData)
+                .select('id')
+                .single();
+
+            if (recipeError || !recipe) throw recipeError;
+
+            const newRecipeId = recipe.id;
+
+            // Loop through and insert each ingredient group with its nested ingredients
+            for (const group of groupsData) {
+                const { data: insertedGroup, error: groupError } = await this.supabaseService.client
+                    .from('ingredient_groups')
+                    .insert({ recipe_id: newRecipeId, name: group.name })
+                    .select('id')
+                    .single();
+
+                if (groupError || !insertedGroup) throw groupError;
+
+                // Map the group ingredients to include the newly generated group_id
+                const ingredientsToInsert = group.ingredients.map(ing => ({
+                    group_id: insertedGroup.id,
+                    ...ing
+                }));
+
+                const { error: ingError } = await this.supabaseService.client
+                    .from('ingredients')
+                    .insert(ingredientsToInsert);
+
+                if (ingError) throw ingError;
+            }
+
+            return newRecipeId;
+        } catch (err) {
+            console.error('Error creating recipe:', err);
+            return null;
+        }
+    }
+}
+
+export interface IngredientGroupRequest {
+    name: string;
+    ingredients: {
+        name: string;
+        description: string;
+        base_quantity: number;
+        unit: UNIT;
+    }[]
 }

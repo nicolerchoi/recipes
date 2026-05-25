@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Recipe } from '../../models';
-import { RecipeService } from '../../services';
+import { Recipe, RECIPE_TAG } from '../../models';
+import { LoginService, RecipeService } from '../../services';
 
 
 @Component({
@@ -14,6 +14,7 @@ import { RecipeService } from '../../services';
 	styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+	loginService = inject(LoginService);
 	private recipeService = inject(RecipeService);
 
 	recipes: Signal<Recipe[]> = this.recipeService.recipes;
@@ -50,12 +51,4 @@ export class DashboardComponent implements OnInit {
 	selectTag(tag: RECIPE_TAG): void {
 		this.selectedTag.set(tag);
 	}
-}
-
-enum RECIPE_TAG {
-	ALL = 'all',
-	VEGETARIAN = 'vegetarian',
-	SOUP = 'soup',
-	QUICK = 'quick',
-	STEAMED = 'steamed'
 }
