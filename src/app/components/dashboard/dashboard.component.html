@@ -16,7 +16,17 @@
     <div class="flex flex-col space-y-3">
         <div class="flex items-center justify-between">
             <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Quick Filters</h2>
-            <span class="text-xs text-slate-500 font-medium">{{ _recipes.length | i18nPlural: recipePluralMapping }} found</span>
+            <div class="flex items-center gap-3">
+                @if (loginService.authSession()) {
+                    <button 
+                        routerLink="/create" 
+                        class="px-3 py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs hover:shadow-md transition-all duration-150 cursor-pointer active:scale-95 flex items-center space-x-2">
+                        <span class="material-symbols-outlined">add</span>
+                        <span>New Recipe</span>
+                    </button>
+                }
+                <span class="text-xs text-slate-500 font-medium">{{ _recipes.length | i18nPlural: recipePluralMapping }} found</span>
+            </div>
         </div>
         
         <div class="flex items-center space-x-2 overflow-x-auto pb-2 no-scrollbar">

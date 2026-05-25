@@ -1,0 +1,23 @@
+<div class="max-w-md mx-auto mt-20 p-6 bg-white border border-slate-200 rounded-2xl shadow-xs">
+    <h2 class="text-lg font-extrabold text-slate-800 mb-4">🔑 Admin Authentication</h2>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-4">
+        <div class="flex flex-col space-y-1">
+            <label class="text-xs font-bold text-slate-500 uppercase">Email Address</label>
+            <input type="email" formControlName="email" class="p-2 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-emerald-500 text-sm" />
+        </div>
+
+        <div class="flex flex-col space-y-1">
+            <label class="text-xs font-bold text-slate-500 uppercase">Password</label>
+            <input type="password" formControlName="password" class="p-2 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-emerald-500 text-sm" />
+        </div>
+
+        @if (errorMessage()) {
+            <p class="text-xs text-rose-600 font-semibold">{{ errorMessage() }}</p>
+        }
+
+        <button type="submit" [disabled]="loginForm.invalid" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm rounded-xl cursor-pointer transition-all disabled:opacity-50">
+            Sign In
+        </button>
+    </form>
+</div>
