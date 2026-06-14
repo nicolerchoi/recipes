@@ -1,176 +1,169 @@
-<div class="mx-auto px-4 py-8 animate-fade-in">
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
-        <div>
-            <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">🍳 Create New Recipe</h1>
-            <p class="text-xs text-slate-400 mt-1">Add your cooking details, ingredients, and preparation phases.</p>
-        </div>
+<div class="mx-auto p-4 animate-fade-in">
+    <div class="mb-6">
+        <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">🍳 Create New Recipe</h1>
+        <p class="text-xs text-slate-400 mt-1">Add your cooking details, ingredients, and preparation phases.</p>
+    </div>
 
-        <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="space-y-5">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="md:col-span-2 flex flex-col space-y-1">
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Recipe Title *</label>
-                    <input
-                        type="text"
-                        formControlName="title"
-                        placeholder="e.g., Creamy Garlic Pasta"
-                        class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden" />
-                </div>
-
-                <div class="flex flex-col space-y-1">
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Base Servings *</label>
-                    <input
-                        type="number"
-                        min="1"
-                        formControlName="servings_base"
-                        class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden text-center font-bold" />
-                </div>
+    <form [formGroup]="recipeForm" class="space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2 flex flex-col space-y-1">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Recipe Title *</label>
+                <input
+                    type="text"
+                    formControlName="title"
+                    placeholder="e.g., Creamy Garlic Pasta"
+                    class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden" />
             </div>
 
             <div class="flex flex-col space-y-1">
-                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Image Link URL</label>
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Base Servings *</label>
                 <input
-                    type="url"
-                    formControlName="image_url"
-                    placeholder="Paste image asset location path..."
-                    class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden" />
+                    type="number"
+                    min="1"
+                    formControlName="servings_base"
+                    class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden text-center font-bold" />
             </div>
+        </div>
 
-            <!-- tags -->
-            <div class="flex flex-col space-y-2">
-                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Recipe Tags (Select all that apply)</label>
-                <div class="flex flex-wrap gap-2">
-                    @for (tagOption of displayedTags(); track tagOption) {
-                        @let isSelected = selectedTags().includes(tagOption);
-                        <button 
-                            type="button"
-                            (click)="toggleTag(tagOption)"
-                            [class.bg-emerald-600]="isSelected"
-                            [class.text-white]="isSelected"
-                            [class.border-transparent]="isSelected"
-                            [class.bg-slate-50]="!isSelected"
-                            [class.text-slate-600]="!isSelected"
-                            [class.border-slate-200]="!isSelected"
-                            class="px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-150 cursor-pointer select-none capitalize hover:border-emerald-500">
-                            {{ tagOption }}
-                        </button>
-                    }
-                </div>
-                <input
-                    type="text"
-                    [formField]="customTagForm"
-                    (keyup.enter)="onEnterCustomTag()"
-                    placeholder="Write a new tag and hit Enter"
-                    class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden" />
-            </div>
+        <div class="flex flex-col space-y-1">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Image Link URL</label>
+            <input
+                type="url"
+                formControlName="image_url"
+                placeholder="Paste image asset location path..."
+                class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden" />
+        </div>
 
-            <!-- ingredients -->
-            <div class="space-y-4 pt-2" [formArray]="ingredientsForm">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <h2 class="text-sm font-bold text-slate-700">🛒 Ingredient Groups</h2>
-                    <button
+        <!-- tags -->
+        <div class="flex flex-col space-y-2">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Recipe Tags (Select all that apply)</label>
+            <div class="flex flex-wrap gap-2">
+                @for (tagOption of displayedTags(); track tagOption) {
+                    @let isSelected = selectedTags().includes(tagOption);
+                    <button 
                         type="button"
-                        (click)="addGroup()"
-                        class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 cursor-pointer">
-                        + Add Group Section
+                        (click)="toggleTag(tagOption)"
+                        [class.bg-emerald-600]="isSelected"
+                        [class.text-white]="isSelected"
+                        [class.border-transparent]="isSelected"
+                        [class.bg-slate-50]="!isSelected"
+                        [class.text-slate-600]="!isSelected"
+                        [class.border-slate-200]="!isSelected"
+                        class="px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-150 cursor-pointer select-none capitalize hover:border-emerald-500">
+                        {{ tagOption }}
                     </button>
-                </div>
+                }
+            </div>
+            <input
+                type="text"
+                [formField]="customTagForm"
+                (keyup.enter)="onEnterCustomTag()"
+                placeholder="Write a new tag and hit Enter"
+                class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden" />
+        </div>
 
-                @let ingredientGroupControls = ingredientsForm.controls;
-                @for (group of ingredientGroupControls; track $index; let gIdx = $index) {
-                    <div [formGroupName]="gIdx" class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 space-y-3 relative group/card animate-fade-in">
-                        <div class="flex items-center space-x-3">
+        <!-- ingredients -->
+        <div class="space-y-4 pt-2" [formArray]="ingredientsForm">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                <h2 class="text-sm font-bold text-slate-700">🛒 Ingredient Groups</h2>
+                <button
+                    type="button"
+                    (click)="addGroup()"
+                    class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 cursor-pointer">
+                    + Add Group Section
+                </button>
+            </div>
+
+            @let ingredientGroupControls = ingredientsForm.controls;
+            @for (group of ingredientGroupControls; track $index; let gIdx = $index) {
+                <details [formGroupName]="gIdx" open class="bg-white border border-slate-200 rounded-2xl px-4 py-2 shadow-xs group transition-all duration-200 [&_summary::-webkit-details-marker]:hidden select-none">
+                    <summary class="pb-2 flex grow items-center justify-between space-x-2.5 font-bold cursor-pointer outline-hidden list-none">
+                        <div class="flex grow items-center space-x-2.5">
+                            <span class="text-xs text-slate-400 transition-transform duration-200 group-open:rotate-90">▶</span>
                             <input
                                 type="text"
                                 formControlName="name"
                                 required
                                 placeholder="Group Name (e.g., The Sauce, Marinade)"
                                 class="flex-1 p-2 text-xs font-bold bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden" />
-
-                            @if (ingredientGroupControls.length > 1) {
-                                <button 
-                                    type="button" 
-                                    (click)="removeGroup(gIdx)" 
-                                    class="px-2 py-1.5 text-[10px] font-bold text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/60 border border-rose-100 rounded-lg transition-all cursor-pointer">
-                                    Remove Group
-                                </button>
-                            }
                         </div>
+                        @if (ingredientGroupControls.length > 1) {
+                            <button 
+                                type="button" 
+                                (click)="removeGroup(gIdx)" 
+                                class="px-2 py-1.5 text-[10px] font-bold text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/60 border border-rose-100 rounded-lg transition-all cursor-pointer">
+                                Remove Group
+                            </button>
+                        }
+                    </summary>
 
-                        <div class="space-y-2" formArrayName="ingredients">
-                            @let ingredientControls = group.controls.ingredients.controls;
-                            @for (ing of ingredientControls; track $index; let iIdx = $index) {
-                                <div [formGroupName]="iIdx" class="grid grid-cols-10 gap-2 items-center group/row animate-fade-in">
-                                    <input
-                                        type="text"
-                                        formControlName="name"
-                                        placeholder="Ingredient item name"
-                                        class="col-span-3 p-2 text-xs bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden" />
-                                    <input
-                                        type="text"
-                                        formControlName="description"
-                                        placeholder="e.g. chopped, thinly sliced"
-                                        class="col-span-4 p-2 text-xs bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden" />
-                                    <input
-                                        type="number"
-                                        formControlName="base_quantity"
-                                        min="0.01"
-                                        step="0.1"
-                                        class="col-span-1 p-2 text-xs bg-white border border-slate-200 rounded-lg text-center focus:border-emerald-500 outline-hidden" />
-                                    <select
-                                        formControlName="unit"
-                                        class="col-span-1 p-2 text-xs bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden text-center font-medium cursor-pointer">
-                                        @for (unitOption of UNIT_OPTIONS; track unitOption) {
-                                            <option [value]="unitOption">{{ unitOption }}</option>
-                                        }
-                                    </select>
+                    <div class="space-y-2" formArrayName="ingredients">
+                        @let ingredientControls = group.controls.ingredients.controls;
+                        @for (ing of ingredientControls; track $index; let iIdx = $index) {
+                            <div [formGroupName]="iIdx" class="grid grid-cols-20 gap-2 items-center group/row animate-fade-in">
+                                <input
+                                    type="text"
+                                    formControlName="name"
+                                    placeholder="Ingredient"
+                                    class="col-span-6 p-2 text-xs bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden" />
+                                <input
+                                    type="text"
+                                    formControlName="description"
+                                    placeholder="chopped, thinly sliced"
+                                    class="col-span-8 p-2 text-xs bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden" />
+                                <input
+                                    type="number"
+                                    formControlName="base_quantity"
+                                    min="0.01"
+                                    step="0.1"
+                                    class="col-span-2 p-2 text-xs bg-white border border-slate-200 rounded-lg text-center focus:border-emerald-500 outline-hidden" />
+                                <select
+                                    formControlName="unit"
+                                    class="col-span-3 p-2 text-xs bg-white border border-slate-200 rounded-lg focus:border-emerald-500 outline-hidden text-center font-medium cursor-pointer">
+                                    @for (unitOption of UNIT_OPTIONS; track unitOption) {
+                                        <option [value]="unitOption">{{ unitOption }}</option>
+                                    }
+                                </select>
 
-                                    <div class="col-span-1 flex justify-end">
-                                        @if (ingredientControls.length > 1) {
-                                            <button 
-                                                type="button"
-                                                (click)="removeIngredient(gIdx, iIdx)"
-                                                aria-label="Delete ingredient"
-                                                class="w-6 h-6 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 flex items-center justify-center font-bold text-sm transition-all cursor-pointer select-none">
-                                                ×
-                                            </button>
-                                        }
-                                    </div>
+                                <div class="col-span-1 flex justify-end">
+                                    @if (ingredientControls.length > 1) {
+                                        <button 
+                                            type="button"
+                                            (click)="removeIngredient(gIdx, iIdx)"
+                                            aria-label="Delete ingredient"
+                                            class="w-6 h-6 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 flex items-center justify-center font-bold text-sm transition-all cursor-pointer select-none">
+                                            ×
+                                        </button>
+                                    }
                                 </div>
-                            }
-                            <button type="button" (click)="addIngredient(gIdx)" class="text-[10px] font-semibold text-slate-400 hover:text-slate-600 mt-1 block cursor-pointer">+ Add item to section</button>
-                        </div>
+                            </div>
+                        }
+                        <button type="button" (click)="addIngredient(gIdx)" class="text-[10px] font-semibold text-slate-400 hover:text-slate-600 mt-1 block cursor-pointer">+ Add item to section</button>
                     </div>
-                }
-            </div>
+                </details>
+            }
+        </div>
 
-            <!-- instructions -->
-            <div class="flex flex-col space-y-1 pt-2">
-                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Cooking Steps (One per line)
-                </label>
-                <textarea
-                    formControlName="instructions"
-                    rows="4"
-                    placeholder="Boil pasta for 10 minutes&#10;Saute minced garlic in olive oil"
-                    class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden font-mono text-xs leading-relaxed"
-                ></textarea>
-            </div>
+        <!-- instructions -->
+        <div class="flex flex-col space-y-1 pt-2">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Cooking Steps (One per line)
+            </label>
+            <textarea
+                formControlName="instructions"
+                rows="4"
+                placeholder="Boil pasta for 10 minutes&#10;Saute minced garlic in olive oil"
+                class="p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 outline-hidden font-mono text-xs leading-relaxed"
+            ></textarea>
+        </div>
 
-            <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
-                <button
-                    type="button"
-                    routerLink="/"
-                    [disabled]="isSubmitting()"
-                    class="px-4 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-50 rounded-xl transition-all cursor-pointer disabled:opacity-50">
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    [disabled]="isSubmitting()"
-                    class="px-5 py-2.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs active:scale-95 transition-all cursor-pointer disabled:opacity-50">
-                    {{ isSubmitting() ? 'Saving Entry...' : 'Publish Recipe' }}
-                </button>
-            </div>
-        </form>
-    </div>
+        <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
+            <button
+                [disabled]="isSubmitting()"
+                (click)="onSubmit()"
+                class="px-5 py-2.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs active:scale-95 transition-all cursor-pointer disabled:opacity-50">
+                {{ isSubmitting() ? 'Saving Entry...' : 'Publish Recipe' }}
+            </button>
+        </div>
+    </form>
 </div>

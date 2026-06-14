@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 
 import { BaseRecipe, Recipe, UNIT } from '../models';
 
@@ -14,6 +14,8 @@ export class RecipeService {
 
     currentRecipe = signal<Recipe | null>(null);
     loadingCurrentRecipe = signal<boolean>(false);
+
+    tags = computed<string[]>(() => [...new Set(this.recipes().flatMap(r => r.tags))]);
 
     constructor(private supabaseService: SupabaseService) {}
 

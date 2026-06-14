@@ -6,6 +6,6 @@ export enum UNIT {
     KG = 'kg',
     CUP = 'cup',
     OZ = 'oz',
-    ML = 'mL',
+    ML = 'ml',
     L = 'L'
 }

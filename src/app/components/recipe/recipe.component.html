@@ -118,21 +118,21 @@
 
                                 <ul class="space-y-2 mt-4 pt-3 border-t border-slate-50 animate-fade-in">
                                     @for (ing of group.ingredients; track ing.id) {
-                                        <li class="flex items-center justify-between p-1 bg-slate-50/40 border border-slate-100/70 rounded-xl hover:bg-slate-50 transition-colors">
-                                            <div class="flex items-center min-w-0 pr-4 gap-3">
-                                                <button
-                                                    data-testid="add-to-shopping-list"
-                                                    aria-label="Add ingredient to cart"
-                                                    class="w-4 h-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-xs hover:shadow-md active:scale-90 select-none transition-all duration-150 cursor-pointer shrink-0"
-                                                    (click)="addIngredientToShoppingList(ing.name, ing.base_quantity, ing.unit)">
-                                                    <span class="material-symbols-outlined">add</span>
-                                                </button>
-                                                <span class="text-sm font-semibold text-slate-800">{{ ing.name | titlecase }}</span>
-                                                <span class="text-xs font-normal text-slate-400 bg-slate-50 truncate">{{ ing.description }}</span>
-                                            </div>
-                                            <span class="text-xs text-slate-400 font-medium mt-0.5">
+                                        <li class="grid grid-cols-20">
+                                            <button
+                                                data-testid="add-to-shopping-list"
+                                                aria-label="Add ingredient to cart"
+                                                class="w-4 h-4 col-span-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-xs hover:shadow-md active:scale-90 select-none transition-all duration-150 cursor-pointer shrink-0"
+                                                (click)="addIngredientToShoppingList(ing.name, ing.base_quantity, ing.unit)">
+                                                <span class="material-symbols-outlined">add</span>
+                                            </button>
+                                            <span class="col-span-3 text-xs text-slate-400 font-medium mt-0.5">
                                                 {{ (ing.base_quantity * multiplier()) }} {{ ing.unit }}
                                             </span>
+                                            <div class="col-span-15">
+                                                <p class="text-sm font-semibold text-slate-800">{{ ing.name | titlecase }}</p>
+                                                <span class="text-xs font-normal text-slate-400 bg-slate-50 truncate">{{ ing.description }}</span>
+                                            </div>
                                         </li>
                                     }
                                 </ul>
