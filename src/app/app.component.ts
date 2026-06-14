@@ -14,9 +14,6 @@ import { UpperCasePipe } from '@angular/common';
 export class App {
     loginService = inject(LoginService);
 
-    isLeftCollapsed = false;
-    isRightCollapsed = true;
-
     logout() {
         if (confirm('Are you sure you want to sign out of the admin panel?')) {
             this.loginService.signOut();

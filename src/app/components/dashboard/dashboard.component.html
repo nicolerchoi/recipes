@@ -10,38 +10,34 @@
             <p class="text-slate-300 text-xs leading-relaxed">
                 Browse your digital cookbook, filter by dietary requirements, or seamlessly scale your ingredients lists.
             </p>
-        </div>
-    </div>
 
-    <div class="flex flex-col space-y-3">
-        <div class="flex items-center justify-between">
-            <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Quick Filters</h2>
-            <div class="flex items-center gap-3">
-                @if (loginService.authSession()) {
-                    <button 
-                        routerLink="/create" 
-                        class="px-3 py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs hover:shadow-md transition-all duration-150 cursor-pointer active:scale-95 flex items-center space-x-2">
-                        <span class="material-symbols-outlined">add</span>
-                        <span>New Recipe</span>
-                    </button>
-                }
-                <span class="text-xs text-slate-500 font-medium">{{ _recipes.length | i18nPlural: recipePluralMapping }} found</span>
-            </div>
-        </div>
-        
-        <div class="flex items-center space-x-2 overflow-x-auto pb-2 no-scrollbar">
-            @for (tag of availableTags; track tag.id) {
-                @let selected = _selectedTag === tag.id;
-                <button
-                    (click)="selectTag(tag.id)"
-                    [class]="selected 
-                        ? 'bg-emerald-600 text-white border-transparent shadow-xs scale-102' 
-                        : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/30'"
-                    class="px-2 py-1 border rounded-full text-xs font-medium transition-all duration-200 cursor-pointer select-none shrink-0 active:scale-95">
-                    {{ tag.label }}
+            @if (loginService.authSession()) {
+                <button 
+                    routerLink="/create" 
+                    class="mt-2 px-3 py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs hover:shadow-md transition-all duration-150 cursor-pointer active:scale-95 flex items-center space-x-2">
+                    <span class="material-symbols-outlined">add</span>
+                    <span>New Recipe</span>
                 </button>
             }
         </div>
+    </div>
+
+    <div class="flex flex-col space-y-1">
+        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Quick Filters</h2>
+        <div>
+            @for (tag of availableTags(); let i = $index; track i) {
+                @let selected = _selectedTag === tag;
+                <button
+                    (click)="selectTag(tag)"
+                    [class]="selected 
+                        ? 'bg-emerald-600 text-white border-transparent shadow-xs scale-102' 
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/30'"
+                    class="mr-2 mb-1 px-2 py-1 border rounded-full text-xs font-medium transition-all duration-200 cursor-pointer select-none shrink-0 active:scale-95">
+                    {{ tag | titlecase }}
+                </button>
+            }
+        </div>
+        <span class="text-right text-xs text-slate-500 font-medium">{{ _recipes.length | i18nPlural: recipePluralMapping }} found</span>
     </div>
 
     @if (isLoading()) {

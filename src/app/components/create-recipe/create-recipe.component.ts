@@ -1,10 +1,9 @@
-// create-recipe.component.ts
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { form, FormField } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 
-import { BaseRecipe, RECIPE_TAG, UNIT } from '../../models';
+import { BaseRecipe, UNIT } from '../../models';
 import { IngredientGroupRequest, RecipeService } from '../../services';
 
 
@@ -39,9 +38,6 @@ export class CreateRecipeComponent {
 
     // Expose enums to the HTML template layout
     UNIT_OPTIONS = Object.values(UNIT);
-    
-    // Filter out 'all' from the selectable creation tags list
-    TAG_OPTIONS = Object.values(RECIPE_TAG).filter(t => t !== RECIPE_TAG.ALL);
 
     recipeForm: FormGroup<RecipeFormGroup> = new FormGroup<RecipeFormGroup>({
         title: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -51,7 +47,7 @@ export class CreateRecipeComponent {
     });
 
     displayedTags = computed<string[]>(() => [...new Set([
-        ...Object.values(RECIPE_TAG).filter(t => t !== RECIPE_TAG.ALL),
+        ...this.recipeService.tags(),
         ...this.selectedTags()
     ])]);
     selectedTags = signal<string[]>([]);
@@ -63,6 +59,10 @@ export class CreateRecipeComponent {
     ]);
 
     isSubmitting = signal(false);
+
+    constructor() {
+		this.recipeService.getRecipeSummaries();
+    }
 
     toggleTag(tag: string): void {
         this.selectedTags.update(c => c.includes(tag) ? c.filter(t => t !== tag) : [...c, tag]);
@@ -94,6 +94,7 @@ export class CreateRecipeComponent {
     }
 
     async onSubmit() {
+        console.log(this.selectedTags())
         if (this.recipeForm.valid && this.ingredientsForm.valid) {
             const formValue = this.recipeForm.getRawValue();
 

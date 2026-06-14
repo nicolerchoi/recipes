@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Recipe, RECIPE_TAG } from '../../models';
+import { Recipe } from '../../models';
 import { LoginService, RecipeService } from '../../services';
 
 
@@ -19,24 +19,25 @@ export class DashboardComponent implements OnInit {
 
 	recipes: Signal<Recipe[]> = this.recipeService.recipes;
 	isLoading: Signal<boolean> = this.recipeService.loadingRecipes;
+	
+	readonly allRecipesTag = 'All Recipes ✨';
 
 	filteredRecipes = computed<Recipe[]>(() => {
 		const recipes = this.recipes();
 		const selected = this.selectedTag();
 
-		return this.selectedTag() === RECIPE_TAG.ALL
+		return this.selectedTag() === this.allRecipesTag
 			? recipes
 			: recipes.filter(r => r.tags.includes(selected));
 	});
 
-	readonly availableTags: { id: RECIPE_TAG, label: string }[] = [
-		{ id: RECIPE_TAG.ALL, label: 'All Recipes ✨' },
-		{ id: RECIPE_TAG.VEGETARIAN, label: '🥦 Vegetarian' },
-		{ id: RECIPE_TAG.SOUP, label: 'Soup' },
-		{ id: RECIPE_TAG.QUICK, label: '⚡ Quick' },
-		{ id: RECIPE_TAG.STEAMED, label: 'Steamed' }
-	];
-	selectedTag = signal<RECIPE_TAG>(RECIPE_TAG.ALL);
+	availableTags = computed<string[]>(() => {
+		return [
+			this.allRecipesTag,
+			...this.recipeService.tags()
+		];
+	});
+	selectedTag = signal<string>(this.allRecipesTag);
 
 	recipePluralMapping: { [k: string]: string } = {
 		'=0': '0 Recipes',
@@ -48,7 +49,7 @@ export class DashboardComponent implements OnInit {
 		this.recipeService.getRecipeSummaries();
 	}
 
-	selectTag(tag: RECIPE_TAG): void {
+	selectTag(tag: string): void {
 		this.selectedTag.set(tag);
 	}
 }
