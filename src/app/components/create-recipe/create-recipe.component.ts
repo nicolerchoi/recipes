@@ -22,6 +22,7 @@ interface IngredientGroupFormGroup {
 interface IngredientFormGroup {
     name: FormControl<string>;
     description: FormControl<string>;
+    toTaste: FormControl<boolean>;
     base_quantity: FormControl<number>;
     unit: FormControl<UNIT>;
 }
@@ -127,6 +128,7 @@ function createIngredientControl(): FormGroup<IngredientFormGroup> {
     return new FormGroup<IngredientFormGroup>({
         name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         description: new FormControl<string>('', { nonNullable: true }),
+        toTaste: new FormControl<boolean>(false, { nonNullable: true }),
         base_quantity: new FormControl<number>(1, { nonNullable: true }),
         unit: new FormControl<UNIT>(UNIT.GRAM, { nonNullable: true, validators: [Validators.required] }),
     })

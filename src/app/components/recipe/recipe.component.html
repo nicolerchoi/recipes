@@ -32,7 +32,7 @@
             </div>
         } @else {
             <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
-                <div class="relative h-64 md:h-80 w-full bg-slate-100">
+                <div class="relative h-80 md:h-96 w-full bg-slate-100">
                     <img 
                         [src]="_recipe.image_url || 'https://placehold.co/600x400?text=No+Image'" 
                         [alt]="_recipe.title"
@@ -101,6 +101,9 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="text-xs text-right text-slate-400 font-semibold uppercase tracking-wider">
+                            {{ _recipe.servings_base * multiplier() }} servings
+                        </div>
 
                         @for (group of _recipe.ingredient_groups || []; track group.id) {
                             <details open class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs group transition-all duration-200 [&_summary::-webkit-details-marker]:hidden select-none">
@@ -127,7 +130,9 @@
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
                                             <span class="col-span-3 text-xs text-slate-400 font-medium mt-0.5">
-                                                {{ (ing.base_quantity * multiplier()) }} {{ ing.unit }}
+                                                @if (ing.base_quantity && ing.unit) {
+                                                    {{ (ing.base_quantity * multiplier()) }} {{ ing.unit }}
+                                                }
                                             </span>
                                             <div class="col-span-15">
                                                 <p class="text-sm font-semibold text-slate-800">{{ ing.name | titlecase }}</p>

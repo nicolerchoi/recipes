@@ -134,7 +134,12 @@ export class RecipeService {
                 // Map the group ingredients to include the newly generated group_id
                 const ingredientsToInsert = group.ingredients.map(ing => ({
                     group_id: insertedGroup.id,
-                    ...ing
+                    name: ing.name,
+                    description: ing.description,
+                    ...(ing.toTaste
+                        ? {}
+                        : { base_quantity: ing.base_quantity, unit: ing.unit }
+                    )
                 }));
 
                 const { error: ingError } = await this.supabaseService.client
@@ -157,7 +162,8 @@ export interface IngredientGroupRequest {
     ingredients: {
         name: string;
         description: string;
-        base_quantity: number;
-        unit: UNIT;
+        toTaste: boolean;
+        base_quantity?: number;
+        unit?: UNIT;
     }[]
 }
